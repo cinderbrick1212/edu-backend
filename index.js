@@ -36,6 +36,16 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'Backend running 🚀', timestamp: new Date() });
 });
 
+// Root route (useful for browsers / basic checks)
+app.get('/', (req, res) => {
+  res.status(200).json({ success: true, message: 'Backend running 🚀', uptime: process.uptime() });
+});
+
+// 404 handler for unmatched routes
+app.use((req, res, next) => {
+  res.status(404).json({ success: false, error: 'Not Found' });
+});
+
 // ============ ERROR HANDLING ============
 app.use(require('./middleware/errorHandler'));
 
