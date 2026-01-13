@@ -2,6 +2,7 @@ const express = require('express');
 const { body } = require('express-validator');
 const authController = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
+const asyncHandler = require('../middleware/asyncHandler');
 
 const router = express.Router();
 
@@ -11,7 +12,7 @@ router.post(
     body('email').isEmail().normalizeEmail(),
     body('password').isLength({ min: 6 }),
   ],
-  authController.register
+  asyncHandler(authController.register)
 );
 
 router.post(
@@ -20,9 +21,9 @@ router.post(
     body('email').isEmail(),
     body('password').exists(),
   ],
-  authController.login
+  asyncHandler(authController.login)
 );
 
-router.get('/me', protect, authController.getMe);
+router.get('/me', protect, asyncHandler(authController.getMe));
 
 module.exports = router;

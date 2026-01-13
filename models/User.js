@@ -49,4 +49,7 @@ UserSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
+// Ensure index on email for uniqueness and faster queries
+UserSchema.index({ email: 1 }, { unique: true });
+
 module.exports = mongoose.model('User', UserSchema);

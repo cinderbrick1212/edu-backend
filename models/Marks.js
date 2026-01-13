@@ -18,4 +18,7 @@ const MarksSchema = new mongoose.Schema({
   recordedAt: { type: Date, default: Date.now },
 });
 
+// Index to speed up marks aggregation by user
+MarksSchema.index({ userId: 1 });
+
 module.exports = mongoose.model('Marks', MarksSchema);

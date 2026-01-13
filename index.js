@@ -9,6 +9,7 @@ const app = express();
 
 // ============ MIDDLEWARE ============
 app.use(helmet()); // Security headers
+app.use(require('./middleware/rateLimiter'));
 app.use(morgan('combined')); // Logging
 app.use(express.json());
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
@@ -28,6 +29,7 @@ app.use('/api/marks', require('./routes/marksRoutes'));
 app.use('/api/resources', require('./routes/resourceRoutes'));
 app.use('/api/stats', require('./routes/statsRoutes'));
 app.use('/api/ai', require('./routes/aiRoutes'));
+app.use('/health', require('./routes/healthRoutes'));
 
 // ============ HEALTH CHECK ============
 app.get('/health', (req, res) => {
@@ -35,12 +37,7 @@ app.get('/health', (req, res) => {
 });
 
 // ============ ERROR HANDLING ============
-app.use((err, req, res, next) => {
-  console.error('❌ Error:', err.message);
-  const status = err.status || 500;
-  const message = err.message || 'Internal Server Error';
-  res.status(status).json({ success: false, error: message });
-});
+app.use(require('./middleware/errorHandler'));
 
 // ============ DATABASE CONNECTION ============
 mongoose.connect(process.env.MONGODB_URI, {
@@ -52,6 +49,10 @@ mongoose.connect(process.env.MONGODB_URI, {
 
 // ============ START SERVER ============
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🎓 Backend running on http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`🎓 Backend running on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;

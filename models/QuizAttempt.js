@@ -25,4 +25,7 @@ const QuizAttemptSchema = new mongoose.Schema({
   timeTaken: Number, // seconds
 });
 
+// Indexes to speed up lookups by user and quiz
+QuizAttemptSchema.index({ userId: 1, quizId: 1 });
+
 module.exports = mongoose.model('QuizAttempt', QuizAttemptSchema);
