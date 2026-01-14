@@ -28,12 +28,34 @@ exports.uploadResource = async (req, res) => {
   res.status(201).json({ success: true, resource });
 };
 
+// @desc    Get resources by category or search
+// @route   GET /api/resources
+// @access  Public
+exports.getResources = async (req, res) => {
+  const { category, subject, search } = req.query;
+  let query = {};
+
+  if (category) query.category = category;
+  if (subject) query.subject = { $regex: subject, $options: 'i' };
+  if (search) {
+    query.$or = [
+      { title: { $regex: search, $options: 'i' } },
+      { description: { $regex: search, $options: 'i' } }
+    ];
+  }
+
+  const resources = await Resource.find(query)
+    .populate('uploadedBy', 'profile.name')
+    .sort({ createdAt: -1 });
+  res.json({ resources });
+};
+
 // @desc    Get resources by category
 // @route   GET /api/resources/category/:category
 // @access  Public
 exports.getResourcesByCategory = async (req, res) => {
   const resources = await Resource.find({ category: req.params.category }).populate('uploadedBy', 'profile.name');
-  res.json(resources);
+  res.json({ resources });
 };
 
 // @desc    Download a resource

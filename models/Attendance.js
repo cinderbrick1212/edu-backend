@@ -20,4 +20,7 @@ const AttendanceSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
+// Index to speed up attendance lookups for users
+AttendanceSchema.index({ userId: 1, date: -1 });
+
 module.exports = mongoose.model('Attendance', AttendanceSchema);

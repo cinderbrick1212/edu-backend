@@ -22,10 +22,27 @@ exports.createPost = async (req, res) => {
 // @route   GET /api/forums
 // @access  Public
 exports.getPosts = async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
     const posts = await ForumPost.find()
         .populate('author', 'profile.name')
-        .sort({ createdAt: -1 });
-    res.status(200).json({ success: true, posts });
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
+
+    const total = await ForumPost.countDocuments();
+
+    res.json({
+        posts,
+        pagination: {
+            page,
+            limit,
+            total,
+            pages: Math.ceil(total / limit)
+        }
+    });
 };
 
 // @desc    Get single post

@@ -6,6 +6,7 @@ const asyncHandler = require('../middleware/asyncHandler');
 
 const router = express.Router();
 
+router.get('/', asyncHandler(resourceController.getResources));
 router.post('/', protect, upload.single('file'), asyncHandler(resourceController.uploadResource));
 router.get('/category/:category', asyncHandler(resourceController.getResourcesByCategory));
 router.get('/:id/download', asyncHandler(resourceController.downloadResource));

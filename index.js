@@ -13,6 +13,7 @@ app.use(require('./middleware/rateLimiter'));
 app.use(morgan('combined')); // Logging
 app.use(express.json());
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use(require('./middleware/responseWrapper'));
 const allowedOrigins = process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',') : ['http://localhost:3000', 'http://localhost:19006', 'http://127.0.0.1:19006', 'http://192.168.x.x:5000'];
 
 app.use(cors({
@@ -64,8 +65,8 @@ mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log('✅ MongoDB Connected'))
-.catch((err) => console.error('❌ MongoDB Error:', err));
+  .then(() => console.log('✅ MongoDB Connected'))
+  .catch((err) => console.error('❌ MongoDB Error:', err));
 
 // ============ START SERVER ============
 const PORT = process.env.PORT || 5000;

@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Marks = require('../models/Marks');
 
 // @desc    Submit marks
@@ -33,7 +34,7 @@ exports.getUserMarks = async (req, res) => {
 // @access  Private
 exports.getUserAverage = async (req, res) => {
     const stats = await Marks.aggregate([
-        { $match: { userId: require('mongoose').Types.ObjectId(req.params.userId) } },
+        { $match: { userId: new mongoose.Types.ObjectId(req.params.userId) } },
         {
             $group: {
                 _id: null,
