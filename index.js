@@ -13,8 +13,18 @@ app.use(require('./middleware/rateLimiter'));
 app.use(morgan('combined')); // Logging
 app.use(express.json());
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
+const allowedOrigins = process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',') : ['http://localhost:3000', 'http://localhost:19006', 'http://127.0.0.1:19006', 'http://192.168.x.x:5000'];
+
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://192.168.x.x:5000'], // Update for your React Native IP
+  origin: function (origin, callback) {
+    // allow requests with no origin (mobile apps, curl, native clients)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'), false);
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200
 }));
