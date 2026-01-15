@@ -14,12 +14,12 @@ app.use(morgan('combined')); // Logging
 app.use(express.json());
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(require('./middleware/responseWrapper'));
-const allowedOrigins = process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',') : ['http://localhost:3000', 'http://localhost:19006', 'http://127.0.0.1:19006', 'http://192.168.x.x:5000'];
+const allowedOrigins = process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',') : ['http://localhost:3000', 'http://localhost:19006', 'http://127.0.0.1:19006', 'http://192.168.5.8:19006'];
 
 app.use(cors({
   origin: function (origin, callback) {
     // allow requests with no origin (mobile apps, curl, native clients)
-    if (!origin) return callback(null, true);
+    if (!origin || process.env.NODE_ENV === 'development') return callback(null, true);
     if (allowedOrigins.indexOf(origin) !== -1) {
       return callback(null, true);
     } else {
