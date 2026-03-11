@@ -87,7 +87,7 @@ npm install --save-dev nodemon
 
 ```env
 # Database
-MONGODB_URI=mongodb+srv://eduuser:yKPCIyhzsI8J0p14@cluster0.tscye48.mongodb.net/?appName=Cluster0
+MONGODB_URI=mongodb+srv://your_username:your_password@your_cluster.mongodb.net/?appName=YourApp
 
 # Server
 PORT=5000
@@ -98,7 +98,7 @@ JWT_SECRET=your_super_secret_jwt_key_change_this_in_production
 JWT_EXPIRE=7d
 
 # Gemini
-GEMINI_API_KEY=AIzaSyDp_Bcz4KOg813IfexLspwL0DPEnjs_57E
+GEMINI_API_KEY=your_gemini_api_key
 
 # File Upload (Optional: Cloudinary for production)
 CLOUDINARY_NAME=your_cloudinary_name
